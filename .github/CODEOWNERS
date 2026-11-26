@@ -1,0 +1,5 @@
+/bin/pr-gate.sh @hanzhad
+/lib/pr-gate-core.sh @hanzhad
+/lib/pr_gate_watch_core.py @hanzhad
+/lib/auto-review-mark.sh @hanzhad
+/.github/ @hanzhad

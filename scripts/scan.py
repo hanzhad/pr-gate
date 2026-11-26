@@ -21,9 +21,10 @@ import sys
 # A bare reference above it points somewhere else.
 MAX_PUBLIC_ISSUE = 99
 OWN_REPO = "hanzhad/pr-gate"
+SYNTHETIC_TEST_OWNERS = {"acme", "other", "external", "org", "o", "example", "owner", "old", "test"}
 
 GENERIC_HOME_NAMES = {"node", "user", "runner"}
-ALLOWED_EMAILS = {"noreply@github.com", "noreply@anthropic.com"}
+ALLOWED_EMAILS = {"noreply@github.com", "noreply@anthropic.com", "git@github.com"}
 ALLOWED_EMAIL_DOMAINS = {
     "users.noreply.github.com",
     "example.com",
@@ -92,7 +93,9 @@ def categories(line, deny):
         found.append("email")
     refs = list(REPO_REF_RE.finditer(line)) + list(URL_REF_RE.finditer(line))
     bad_ref = any(
-        (m.group(1) + "/" + m.group(2)).lower() != OWN_REPO for m in refs
+        (m.group(1) + "/" + m.group(2)).lower() != OWN_REPO
+        and m.group(1).lower() not in SYNTHETIC_TEST_OWNERS
+        for m in refs
     )
     for m in BARE_REF_RE.finditer(line):
         digits = m.group(1)
