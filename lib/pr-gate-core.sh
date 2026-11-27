@@ -658,7 +658,7 @@ decide_pr_gate() {
 
   # 12b. Agent pull request without an Executors block
   if ! evaluate_executor_ledger "$is_agent" "$has_block" >/dev/null; then
-    echo "4|NEEDS_META|0|agent pull request has no Executors block; run executor-block.sh --apply"
+    echo "4|NEEDS_META|0|agent pull request is missing required Executors ledger block"
     return 0
   fi
 

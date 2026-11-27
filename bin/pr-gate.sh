@@ -876,7 +876,42 @@ if [ "${BASH_SOURCE[0]}" = "$0" ]; then
         shift
         ;;
       -h|--help)
-        echo "Usage: pr-gate.sh [PR_NUMBER] [--pr PR_NUMBER] [--repo REPO] [--merge] [--cross-area] [--base-merge-ok] [--watch] [--format text|ndjson] [--fail-fast-ci[=SEC]] [--wait-all-ci]"
+        cat <<'HELP'
+Usage: pr-gate.sh [PR_NUMBER] [OPTIONS]
+
+Deterministic pull-request merge & watch gate across GitHub Actions CI,
+pr-auto-review, optional PR-body contracts, and CODEOWNERS.
+
+Options:
+  --pr PR_NUMBER                  Pull request number (or pass positionally)
+  --repo OWNER/REPO               Target GitHub repository (defaults to current repo)
+  --merge                         Squash-merge with --match-head-commit when gate returns 0|OK
+  --cross-area                    Require maintainer diff review (4|NEEDS_META) on cross-area PRs
+  --base-merge-ok                 Allow merge commits onto the base branch
+  --watch                         Poll CI and review status until a terminal state
+  --format text|ndjson            Watch output format (default: text)
+  --fail-fast-ci[=SEC]            Stop watching early after CI failure grace period (default: 20s)
+  --wait-all-ci                   Wait for all CI checks to settle even after a failure
+  --review-pickup-timeout[=SEC]   Max wait for automated reviewer pickup (default: 600s)
+  -h, --help                      Show this help message and exit 0
+
+Exit Codes (<code|STATUS|allow_admin|reason>):
+  0  OK              Ready to merge
+  1  ERROR           Usage, GitHub API, or configuration error
+  2  WAIT_*          CI or review still pending
+  3  FIX_*           CI failed or unresolved review findings
+  4  NEEDS_META      Requires maintainer diff inspection (or missing Executors/Debt-Issue contract)
+  5  NEEDS_OWNER     Requires explicit owner approval (CODEOWNERS, workflows, no-review, size refusal)
+  6  HEAD_DRIFTED    PR head SHA changed during watch
+  7  BLOCKED_INFRA   Runner/review infrastructure timeout or scheduling stall
+
+Environment Variables:
+  PR_GATE_OWNER_LOGIN             Repository owner login for explicit approval checks
+  PR_GATE_AGENT_AUTHOR_RE         Regex matching bot/agent PR authors for Executors ledger check
+  PR_GATE_DOCKER_AVAILABLE        Set to 0 to skip local Docker container probes
+  AUTO_REVIEW_PROJECTS_FILE       Path to pr-auto-review projects.json registry
+  PR_GATE_CI_RUNNER_STATUS_FILE   Path to docker-ci-gate status.json file
+HELP
         exit 0
         ;;
       -*)
