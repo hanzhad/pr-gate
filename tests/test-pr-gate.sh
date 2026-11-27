@@ -809,7 +809,7 @@ mk_pr() { # $1 = author login (empty = no author field), $2 = body
 }
 NOBLOCK_BODY="Closes #1"
 BLOCK_BODY="Closes #1 <!-- EXECUTORS:START --> | x | <!-- EXECUTORS:END -->"
-EXEC_WANT="4|NEEDS_META|0|agent pull request has no Executors block; run executor-block.sh --apply"
+EXEC_WANT="4|NEEDS_META|0|agent pull request is missing required Executors ledger block"
 
 check "decide_pr_gate: agent pr without executors block" \
   "$EXEC_WANT" \

@@ -2,10 +2,11 @@
 
 - Tests first: write a failing test, then make it pass.
 - One behaviour per pull request, so each change can be reviewed and reverted cleanly.
-- Run the tests and the public-safety scan before pushing:
+- Run the full test suite and the public-safety scan before pushing:
 
   ```bash
   python3 -m unittest discover -s tests -v
+  bash tests/test-pr-gate.sh
   python3 scripts/scan.py --tree .
   python3 scripts/scan.py --history
   ```
